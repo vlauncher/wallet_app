@@ -5,8 +5,8 @@ import { auth } from "../middlewares/auth";
 const router = Router();
 
 router.get('/balance', auth, getWalletBalance);
-router.post('/fund', fundWallet);
-router.post('/transfer', transferFundsToUser);
-router.post('/withdraw', withdrawFromAccount);
+router.post('/fund',auth, fundWallet);
+router.post('/transfer',auth, transferFundsToUser);
+router.post('/withdraw', auth, withdrawFromAccount);
 
 export default router;
