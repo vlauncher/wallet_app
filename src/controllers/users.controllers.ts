@@ -18,8 +18,16 @@ class UserController {
       // Call service to register user
       const accountId = Math.random().toString().slice(2, 13);
       const user = await userService.register({ firstName, lastName, email, password, accountId });
-    //   create a wallet for the user
+    // Check if wallet already exists
+    const existingWallet = await db('wallets').where({ userId: user.id }).first();
+    if (!existingWallet) {
+      // Only create a wallet if it does not already exist
       await db('wallets').insert({ userId: user.id, balance: 0 });
+      console.log(`Wallet created for user ${user.id}`);
+    } else {
+      console.log(`Wallet already exists for user ${user.id}`);
+    }
+
       res.status(201).json({ message: 'User registered successfully', user });
     } catch (error) {
       res.status(400).json({ message: error.message });
