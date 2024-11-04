@@ -9,7 +9,7 @@ This app allows you to manage your wallet and transactions.
 - Transfer funds between users
 
 ## Installation
-1. Clone the repository: `git clone https://github.com/your-username/wallet-management-app.git`
+1. Clone the repository: `git clone https://github.com/vlauncher/wallet_app.git`
 2. Install dependencies: `npm install`
 3. Run the server: `npm start`
 
@@ -43,6 +43,6 @@ This app allows you to manage your wallet and transactions.
 This app is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Contributing
-Please follow the [contributing guidelines](https://github.com/your-username/wallet-management-app/blob/main/CONTRIBUTING.md).
+Please follow the [contributing guidelines](https://github.com/vlauncher/wallet_app/blob/main/CONTRIBUTING.md).
 
 ## ER Diagram
