@@ -45,4 +45,5 @@ This app is licensed under the [MIT License](https://opensource.org/licenses/MIT
 ## Contributing
 Please follow the [contributing guidelines](https://github.com/vlauncher/wallet_app/blob/main/CONTRIBUTING.md).
 
-## ER Diagram
+## ER Diagram![Screenshot from 2024-11-05 21-46-56](https://github.com/user-attachments/assets/f3c6c3a2-1055-40d1-8d41-944b44491adb)
+
