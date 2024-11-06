@@ -36,114 +36,107 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fundWallet = fundWallet;
-exports.transferFundsToUser = transferFundsToUser;
-exports.withdrawFromAccount = withdrawFromAccount;
-exports.getWalletBalance = getWalletBalance;
+exports.WalletController = void 0;
 var wallet_service_1 = require("../services/wallet.service");
-function fundWallet(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userId, amount, result, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    userId = req.user.userId;
-                    amount = req.body.amount;
-                    if (!userId || amount === undefined) {
-                        res.status(400).json({ message: 'userId and amount are required' });
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, (0, wallet_service_1.fundAccount)(userId, amount)];
-                case 1:
-                    result = _a.sent();
-                    res.status(200).json(result);
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.error('Error in fundWallet:', error_1.message);
-                    res.status(500).json({ message: 'Failed to fund account', error: error_1.message });
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
+var walletService = new wallet_service_1.WalletService();
+var WalletController = /** @class */ (function () {
+    function WalletController() {
+    }
+    WalletController.prototype.fundWallet = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userId, amount, result, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        userId = req.user.userId;
+                        amount = req.body.amount;
+                        return [4 /*yield*/, walletService.fundAccount(userId, amount)];
+                    case 1:
+                        result = _a.sent();
+                        res.status(200).json(result);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        console.error('Error in fundWallet:', error_1.message);
+                        res.status(500).json({ message: 'Failed to fund account', error: error_1.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-function transferFundsToUser(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userId, _a, recipientAccountId, amount, error_2;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    userId = req.user.userId;
-                    _a = req.body, recipientAccountId = _a.recipientAccountId, amount = _a.amount;
-                    return [4 /*yield*/, (0, wallet_service_1.transferFunds)(userId, recipientAccountId, amount)];
-                case 1:
-                    _b.sent();
-                    res.json({ message: 'Transfer successful' });
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_2 = _b.sent();
-                    console.error('Error in transferFundsToUser:', error_2.message);
-                    res.status(500).json({ message: 'Failed to transfer funds', error: error_2.message });
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
+    };
+    WalletController.prototype.transferFundsToUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userId, _a, recipientAccountId, amount, result, error_2;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        userId = req.user.userId;
+                        _a = req.body, recipientAccountId = _a.recipientAccountId, amount = _a.amount;
+                        return [4 /*yield*/, walletService.transferFunds(userId, recipientAccountId, amount)];
+                    case 1:
+                        result = _b.sent();
+                        res.status(200).json(result);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_2 = _b.sent();
+                        console.error('Error in transferFundsToUser:', error_2.message);
+                        res.status(500).json({ message: 'Failed to transfer funds', error: error_2.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-function withdrawFromAccount(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userId, amount, balance, error_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    userId = req.user.userId;
-                    amount = req.body.amount;
-                    return [4 /*yield*/, (0, wallet_service_1.getBalance)(userId)];
-                case 1:
-                    balance = _a.sent();
-                    if (amount > balance) {
-                        res.status(400).json({ message: 'Insufficient funds' });
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, (0, wallet_service_1.withdrawFunds)(userId, amount)];
-                case 2:
-                    _a.sent();
-                    res.json({ message: 'Withdrawal successful' });
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_3 = _a.sent();
-                    console.error('Error in withdrawFromAccount:', error_3.message);
-                    res.status(500).json({ message: 'Failed to withdraw funds', error: error_3.message });
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
-            }
+    };
+    WalletController.prototype.withdrawFromAccount = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userId, amount, result, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        userId = req.user.userId;
+                        amount = req.body.amount;
+                        return [4 /*yield*/, walletService.withdrawFunds(userId, amount)];
+                    case 1:
+                        result = _a.sent();
+                        res.status(200).json(result);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_3 = _a.sent();
+                        console.error('Error in withdrawFromAccount:', error_3.message);
+                        res.status(500).json({ message: 'Failed to withdraw funds', error: error_3.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-function getWalletBalance(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userId, balance, error_4;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    userId = req.user.userId;
-                    return [4 /*yield*/, (0, wallet_service_1.getBalance)(userId)];
-                case 1:
-                    balance = _a.sent();
-                    res.json({ balance: balance });
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_4 = _a.sent();
-                    console.error('Error in getWalletBalance:', error_4.message);
-                    res.status(500).json({ message: 'Failed to get balance', error: error_4.message });
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
+    };
+    WalletController.prototype.getWalletBalance = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userId, balance, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        userId = req.user.userId;
+                        return [4 /*yield*/, walletService.getBalance(userId)];
+                    case 1:
+                        balance = _a.sent();
+                        res.status(200).json({ balance: balance });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_4 = _a.sent();
+                        console.error('Error in getWalletBalance:', error_4.message);
+                        res.status(500).json({ message: 'Failed to get balance', error: error_4.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
+    };
+    return WalletController;
+}());
+exports.WalletController = WalletController;

@@ -78,7 +78,7 @@ var UserController = /** @class */ (function () {
                         console.log("Wallet already exists for user ".concat(user.id));
                         _b.label = 5;
                     case 5:
-                        res.status(201).json({ message: 'User registered successfully', user: user });
+                        res.status(201).json({ message: 'User registered successfully', karma: 'email not blacklisted', user: user });
                         return [3 /*break*/, 7];
                     case 6:
                         error_1 = _b.sent();

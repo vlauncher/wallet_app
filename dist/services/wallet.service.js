@@ -39,137 +39,161 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createWallet = createWallet;
-exports.fundAccount = fundAccount;
-exports.transferFunds = transferFunds;
-exports.withdrawFunds = withdrawFunds;
-exports.getBalance = getBalance;
+exports.WalletService = void 0;
+// src/services/WalletService.ts
 var db_1 = __importDefault(require("../config/db"));
-// Create a wallet for a new user
-function createWallet(userId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, (0, db_1.default)('wallets').insert({
-                            userId: userId,
-                            balance: 0, // Initial balance
-                        })];
-                case 1:
-                    _a.sent();
-                    console.log("Wallet created for user ".concat(userId));
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.error('Error creating wallet:', error_1);
-                    throw error_1;
-                case 3: return [2 /*return*/];
-            }
+var WalletService = /** @class */ (function () {
+    function WalletService() {
+    }
+    // Create a new wallet for a user
+    WalletService.prototype.createWallet = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, (0, db_1.default)('wallets').insert({ userId: userId, balance: 0 })];
+                    case 1:
+                        _a.sent();
+                        console.log("Wallet created for user ".concat(userId));
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        console.error('Error creating wallet:', error_1);
+                        throw error_1;
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-// Fund a user's wallet
-function fundAccount(userId, amount) {
-    return __awaiter(this, void 0, void 0, function () {
-        var result, error_2;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!userId || amount === undefined) {
-                        throw new Error('Both userId and amount must be provided');
-                    }
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, (0, db_1.default)('wallets')
-                            .where({ userId: userId })
-                            .increment('balance', amount)];
-                case 2:
-                    result = _a.sent();
-                    if (result === 0)
-                        throw new Error('User wallet not found');
-                    return [2 /*return*/, { message: 'Account funded successfully' }];
-                case 3:
-                    error_2 = _a.sent();
-                    console.error('Error funding account:', error_2);
-                    throw error_2;
-                case 4: return [2 /*return*/];
-            }
+    };
+    // Fund a user's wallet
+    WalletService.prototype.fundAccount = function (userId, amount) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!userId || amount === undefined)
+                            throw new Error('Both userId and amount must be provided');
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, (0, db_1.default)('wallets')
+                                .where({ userId: userId })
+                                .increment('balance', amount)];
+                    case 2:
+                        result = _a.sent();
+                        if (result === 0)
+                            throw new Error('Wallet not found');
+                        return [2 /*return*/, { message: 'Account funded successfully' }];
+                    case 3:
+                        error_2 = _a.sent();
+                        console.error('Error funding account:', error_2);
+                        throw error_2;
+                    case 4: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-// Transfer funds from one user to another
-function transferFunds(senderId, recipientAccountId, amount) {
-    return __awaiter(this, void 0, void 0, function () {
-        var recipient;
-        var _this = this;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, db_1.default)('users').where({ accountId: recipientAccountId }).first()];
-                case 1:
-                    recipient = _a.sent();
-                    if (!recipient)
-                        throw new Error('Recipient not found');
-                    return [4 /*yield*/, db_1.default.transaction(function (trx) { return __awaiter(_this, void 0, void 0, function () {
-                            var senderWallet;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, trx('wallets').where({ userId: senderId }).first()];
-                                    case 1:
-                                        senderWallet = _a.sent();
-                                        if (!senderWallet || senderWallet.balance < amount)
-                                            throw new Error('Insufficient balance');
-                                        return [4 /*yield*/, trx('wallets').where({ userId: senderId }).decrement('balance', amount)];
-                                    case 2:
-                                        _a.sent();
-                                        return [4 /*yield*/, trx('wallets').where({ userId: recipient.id }).increment('balance', amount)];
-                                    case 3:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); })];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
+    };
+    // Transfer funds between users
+    WalletService.prototype.transferFunds = function (senderId, recipientAccountId, amount) {
+        return __awaiter(this, void 0, void 0, function () {
+            var recipient_1, error_3;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!senderId || !recipientAccountId || amount === undefined)
+                            throw new Error('Sender ID, recipient account ID, and amount are required');
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        return [4 /*yield*/, (0, db_1.default)('users').where({ accountId: recipientAccountId }).first()];
+                    case 2:
+                        recipient_1 = _a.sent();
+                        if (!recipient_1)
+                            throw new Error('Recipient not found');
+                        return [4 /*yield*/, db_1.default.transaction(function (trx) { return __awaiter(_this, void 0, void 0, function () {
+                                var senderWallet;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, trx('wallets').where({ userId: senderId }).first()];
+                                        case 1:
+                                            senderWallet = _a.sent();
+                                            if (!senderWallet || senderWallet.balance < amount)
+                                                throw new Error('Insufficient balance');
+                                            return [4 /*yield*/, trx('wallets').where({ userId: senderId }).decrement('balance', amount)];
+                                        case 2:
+                                            _a.sent();
+                                            return [4 /*yield*/, trx('wallets').where({ userId: recipient_1.id }).increment('balance', amount)];
+                                        case 3:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/, { message: 'Funds transferred successfully' }];
+                    case 4:
+                        error_3 = _a.sent();
+                        console.error('Error transferring funds:', error_3);
+                        throw error_3;
+                    case 5: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-// Withdraw funds from a user's wallet
-function withdrawFunds(userId, amount) {
-    return __awaiter(this, void 0, void 0, function () {
-        var wallet;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, db_1.default)('wallets').where({ userId: userId }).first()];
-                case 1:
-                    wallet = _a.sent();
-                    if (!wallet || wallet.balance < amount)
-                        throw new Error('Insufficient funds');
-                    return [4 /*yield*/, (0, db_1.default)('wallets').where({ userId: userId }).decrement('balance', amount)];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
+    };
+    // Withdraw funds from a user's wallet
+    WalletService.prototype.withdrawFunds = function (userId, amount) {
+        return __awaiter(this, void 0, void 0, function () {
+            var wallet, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, (0, db_1.default)('wallets').where({ userId: userId }).first()];
+                    case 1:
+                        wallet = _a.sent();
+                        if (!wallet || wallet.balance < amount)
+                            throw new Error('Insufficient funds');
+                        return [4 /*yield*/, (0, db_1.default)('wallets').where({ userId: userId }).decrement('balance', amount)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, { message: 'Withdrawal successful' }];
+                    case 3:
+                        error_4 = _a.sent();
+                        console.error('Error during withdrawal:', error_4);
+                        throw error_4;
+                    case 4: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-// Retrieve wallet balance
-function getBalance(userId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var wallet;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, db_1.default)('wallets').where({ userId: userId }).first()];
-                case 1:
-                    wallet = _a.sent();
-                    if (!wallet)
-                        throw new Error('Wallet not found');
-                    return [2 /*return*/, wallet.balance];
-            }
+    };
+    // Get the balance of a user's wallet
+    WalletService.prototype.getBalance = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var wallet, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, (0, db_1.default)('wallets').where({ userId: userId }).first()];
+                    case 1:
+                        wallet = _a.sent();
+                        if (!wallet)
+                            throw new Error('Wallet not found');
+                        return [2 /*return*/, wallet.balance];
+                    case 2:
+                        error_5 = _a.sent();
+                        console.error('Error fetching balance:', error_5);
+                        throw error_5;
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
+    };
+    return WalletService;
+}());
+exports.WalletService = WalletService;
