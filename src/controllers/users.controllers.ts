@@ -28,7 +28,7 @@ class UserController {
       console.log(`Wallet already exists for user ${user.id}`);
     }
 
-      res.status(201).json({ message: 'User registered successfully', user });
+      res.status(201).json({ message: 'User registered successfully',karma: 'email not blacklisted', user });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
